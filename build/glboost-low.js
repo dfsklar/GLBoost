@@ -6220,9 +6220,9 @@
 
         this._AABB.updateAllInfo();
 
-        for (var _attribName in vertices) {
-          var float32AryVertexData = new Float32Array(this._vertices[_attribName]);
-          gl.bindBuffer(gl.ARRAY_BUFFER, this._vboObj[_attribName]);
+        for (var attribName in vertices) {
+          var float32AryVertexData = new Float32Array(this._vertices[attribName]);
+          gl.bindBuffer(gl.ARRAY_BUFFER, this._vboObj[attribName]);
           gl.bufferSubData(gl.ARRAY_BUFFER, 0, float32AryVertexData);
           gl.bindBuffer(gl.ARRAY_BUFFER, null);
         }
@@ -6394,53 +6394,49 @@
         var _this7 = this;
 
         if (Array.isArray(geometrys)) {
-          (function () {
-            var typedArrayDic = {};
-            var allVertexAttribs = Geometry._allVertexAttribs(_this7._vertices);
+          var typedArrayDic = {};
+          var allVertexAttribs = Geometry._allVertexAttribs(this._vertices);
+          allVertexAttribs.forEach(function (attribName) {
+            var thisLength = _this7._vertices[attribName].length;
+
+            var allGeomLength = 0;
+            geometrys.forEach(function (geometry) {
+              allGeomLength += geometry._vertices[attribName].length;
+            });
+            typedArrayDic[attribName] = new Float32Array(thisLength + allGeomLength);
+          });
+
+          var lastThisLengthDic = {};
+          allVertexAttribs.forEach(function (attribName) {
+            lastThisLengthDic[attribName] = 0;
+          });
+          geometrys.forEach(function (geometry, index) {
+            var typedSubArrayDic = {};
             allVertexAttribs.forEach(function (attribName) {
-              var thisLength = _this7._vertices[attribName].length;
+              var typedArray = typedArrayDic[attribName];
 
-              var allGeomLength = 0;
-              geometrys.forEach(function (geometry) {
-                allGeomLength += geometry._vertices[attribName].length;
-              });
-              typedArrayDic[attribName] = new Float32Array(thisLength + allGeomLength);
+              if (index === 0) {
+                lastThisLengthDic[attribName] = geometrys[index]._vertices[attribName].length;
+              }
+
+              var end = typeof geometrys[index + 1] !== 'undefined' ? lastThisLengthDic[attribName] + geometrys[index + 1]._vertices[attribName].length : void 0;
+              typedSubArrayDic[attribName] = typedArray.subarray(0, end);
+              lastThisLengthDic[attribName] = end;
             });
-
-            var lastThisLengthDic = {};
-            allVertexAttribs.forEach(function (attribName) {
-              lastThisLengthDic[attribName] = 0;
-            });
-            geometrys.forEach(function (geometry, index) {
-              var typedSubArrayDic = {};
-              allVertexAttribs.forEach(function (attribName) {
-                var typedArray = typedArrayDic[attribName];
-
-                if (index === 0) {
-                  lastThisLengthDic[attribName] = geometrys[index]._vertices[attribName].length;
-                }
-
-                var end = typeof geometrys[index + 1] !== 'undefined' ? lastThisLengthDic[attribName] + geometrys[index + 1]._vertices[attribName].length : void 0;
-                typedSubArrayDic[attribName] = typedArray.subarray(0, end);
-                lastThisLengthDic[attribName] = end;
-              });
-              _this7.mergeInner(geometry, typedSubArrayDic, index === 0);
-            });
-          })();
+            _this7.mergeInner(geometry, typedSubArrayDic, index === 0);
+          });
         } else {
-          (function () {
-            var geometry = geometrys;
-            var typedArrayDic = {};
-            var allVertexAttribs = Geometry._allVertexAttribs(_this7._vertices);
-            allVertexAttribs.forEach(function (attribName) {
-              var thisLength = _this7._vertices[attribName].length;
-              var geomLength = geometry._vertices[attribName].length;
+          var geometry = geometrys;
+          var _typedArrayDic = {};
+          var _allVertexAttribs2 = Geometry._allVertexAttribs(this._vertices);
+          _allVertexAttribs2.forEach(function (attribName) {
+            var thisLength = _this7._vertices[attribName].length;
+            var geomLength = geometry._vertices[attribName].length;
 
-              typedArrayDic[attribName] = new Float32Array(thisLength + geomLength);
-            });
+            _typedArrayDic[attribName] = new Float32Array(thisLength + geomLength);
+          });
 
-            _this7.mergeInner(geometry, typedArrayDic);
-          })();
+          this.mergeInner(geometry, _typedArrayDic);
         }
       }
 
@@ -6503,53 +6499,49 @@
         var _this9 = this;
 
         if (Array.isArray(geometrys)) {
-          (function () {
-            var typedArrayDic = {};
-            var allVertexAttribs = Geometry._allVertexAttribs(_this9._vertices);
+          var typedArrayDic = {};
+          var allVertexAttribs = Geometry._allVertexAttribs(this._vertices);
+          allVertexAttribs.forEach(function (attribName) {
+            var thisLength = _this9._vertices[attribName].length;
+
+            var allGeomLength = 0;
+            geometrys.forEach(function (geometry) {
+              allGeomLength += geometry._vertices[attribName].length;
+            });
+            typedArrayDic[attribName] = new Float32Array(thisLength + allGeomLength);
+          });
+
+          var lastThisLengthDic = {};
+          allVertexAttribs.forEach(function (attribName) {
+            lastThisLengthDic[attribName] = 0;
+          });
+          geometrys.forEach(function (geometry, index) {
+            var typedSubArrayDic = {};
             allVertexAttribs.forEach(function (attribName) {
-              var thisLength = _this9._vertices[attribName].length;
+              var typedArray = typedArrayDic[attribName];
 
-              var allGeomLength = 0;
-              geometrys.forEach(function (geometry) {
-                allGeomLength += geometry._vertices[attribName].length;
-              });
-              typedArrayDic[attribName] = new Float32Array(thisLength + allGeomLength);
+              if (index === 0) {
+                lastThisLengthDic[attribName] = geometrys[index]._vertices[attribName].length;
+              }
+
+              var end = typeof geometrys[index + 1] !== 'undefined' ? lastThisLengthDic[attribName] + geometrys[index + 1]._vertices[attribName].length : void 0;
+              typedSubArrayDic[attribName] = typedArray.subarray(0, end);
+              lastThisLengthDic[attribName] = end;
             });
-
-            var lastThisLengthDic = {};
-            allVertexAttribs.forEach(function (attribName) {
-              lastThisLengthDic[attribName] = 0;
-            });
-            geometrys.forEach(function (geometry, index) {
-              var typedSubArrayDic = {};
-              allVertexAttribs.forEach(function (attribName) {
-                var typedArray = typedArrayDic[attribName];
-
-                if (index === 0) {
-                  lastThisLengthDic[attribName] = geometrys[index]._vertices[attribName].length;
-                }
-
-                var end = typeof geometrys[index + 1] !== 'undefined' ? lastThisLengthDic[attribName] + geometrys[index + 1]._vertices[attribName].length : void 0;
-                typedSubArrayDic[attribName] = typedArray.subarray(0, end);
-                lastThisLengthDic[attribName] = end;
-              });
-              _this9.mergeHarderInner(geometry, typedSubArrayDic, index === 0);
-            });
-          })();
+            _this9.mergeHarderInner(geometry, typedSubArrayDic, index === 0);
+          });
         } else {
-          (function () {
-            var geometry = geometrys;
-            var typedArrayDic = {};
-            var allVertexAttribs = Geometry._allVertexAttribs(_this9._vertices);
-            allVertexAttribs.forEach(function (attribName) {
-              var thisLength = _this9._vertices[attribName].length;
-              var geomLength = geometry._vertices[attribName].length;
+          var geometry = geometrys;
+          var _typedArrayDic2 = {};
+          var _allVertexAttribs3 = Geometry._allVertexAttribs(this._vertices);
+          _allVertexAttribs3.forEach(function (attribName) {
+            var thisLength = _this9._vertices[attribName].length;
+            var geomLength = geometry._vertices[attribName].length;
 
-              typedArrayDic[attribName] = new Float32Array(thisLength + geomLength);
-            });
+            _typedArrayDic2[attribName] = new Float32Array(thisLength + geomLength);
+          });
 
-            _this9.mergeHarderInner(geometry, typedArrayDic);
-          })();
+          this.mergeHarderInner(geometry, _typedArrayDic2);
         }
       }
 

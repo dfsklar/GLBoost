@@ -4565,9 +4565,9 @@
 
         this._AABB.updateAllInfo();
 
-        for (var _attribName in vertices) {
-          var float32AryVertexData = new Float32Array(this._vertices[_attribName]);
-          gl.bindBuffer(gl.ARRAY_BUFFER, this._vboObj[_attribName]);
+        for (var attribName in vertices) {
+          var float32AryVertexData = new Float32Array(this._vertices[attribName]);
+          gl.bindBuffer(gl.ARRAY_BUFFER, this._vboObj[attribName]);
           gl.bufferSubData(gl.ARRAY_BUFFER, 0, float32AryVertexData);
           gl.bindBuffer(gl.ARRAY_BUFFER, null);
         }
@@ -4739,53 +4739,49 @@
         var _this7 = this;
 
         if (Array.isArray(geometrys)) {
-          (function () {
-            var typedArrayDic = {};
-            var allVertexAttribs = Geometry._allVertexAttribs(_this7._vertices);
+          var typedArrayDic = {};
+          var allVertexAttribs = Geometry._allVertexAttribs(this._vertices);
+          allVertexAttribs.forEach(function (attribName) {
+            var thisLength = _this7._vertices[attribName].length;
+
+            var allGeomLength = 0;
+            geometrys.forEach(function (geometry) {
+              allGeomLength += geometry._vertices[attribName].length;
+            });
+            typedArrayDic[attribName] = new Float32Array(thisLength + allGeomLength);
+          });
+
+          var lastThisLengthDic = {};
+          allVertexAttribs.forEach(function (attribName) {
+            lastThisLengthDic[attribName] = 0;
+          });
+          geometrys.forEach(function (geometry, index) {
+            var typedSubArrayDic = {};
             allVertexAttribs.forEach(function (attribName) {
-              var thisLength = _this7._vertices[attribName].length;
+              var typedArray = typedArrayDic[attribName];
 
-              var allGeomLength = 0;
-              geometrys.forEach(function (geometry) {
-                allGeomLength += geometry._vertices[attribName].length;
-              });
-              typedArrayDic[attribName] = new Float32Array(thisLength + allGeomLength);
+              if (index === 0) {
+                lastThisLengthDic[attribName] = geometrys[index]._vertices[attribName].length;
+              }
+
+              var end = typeof geometrys[index + 1] !== 'undefined' ? lastThisLengthDic[attribName] + geometrys[index + 1]._vertices[attribName].length : void 0;
+              typedSubArrayDic[attribName] = typedArray.subarray(0, end);
+              lastThisLengthDic[attribName] = end;
             });
-
-            var lastThisLengthDic = {};
-            allVertexAttribs.forEach(function (attribName) {
-              lastThisLengthDic[attribName] = 0;
-            });
-            geometrys.forEach(function (geometry, index) {
-              var typedSubArrayDic = {};
-              allVertexAttribs.forEach(function (attribName) {
-                var typedArray = typedArrayDic[attribName];
-
-                if (index === 0) {
-                  lastThisLengthDic[attribName] = geometrys[index]._vertices[attribName].length;
-                }
-
-                var end = typeof geometrys[index + 1] !== 'undefined' ? lastThisLengthDic[attribName] + geometrys[index + 1]._vertices[attribName].length : void 0;
-                typedSubArrayDic[attribName] = typedArray.subarray(0, end);
-                lastThisLengthDic[attribName] = end;
-              });
-              _this7.mergeInner(geometry, typedSubArrayDic, index === 0);
-            });
-          })();
+            _this7.mergeInner(geometry, typedSubArrayDic, index === 0);
+          });
         } else {
-          (function () {
-            var geometry = geometrys;
-            var typedArrayDic = {};
-            var allVertexAttribs = Geometry._allVertexAttribs(_this7._vertices);
-            allVertexAttribs.forEach(function (attribName) {
-              var thisLength = _this7._vertices[attribName].length;
-              var geomLength = geometry._vertices[attribName].length;
+          var geometry = geometrys;
+          var _typedArrayDic = {};
+          var _allVertexAttribs2 = Geometry._allVertexAttribs(this._vertices);
+          _allVertexAttribs2.forEach(function (attribName) {
+            var thisLength = _this7._vertices[attribName].length;
+            var geomLength = geometry._vertices[attribName].length;
 
-              typedArrayDic[attribName] = new Float32Array(thisLength + geomLength);
-            });
+            _typedArrayDic[attribName] = new Float32Array(thisLength + geomLength);
+          });
 
-            _this7.mergeInner(geometry, typedArrayDic);
-          })();
+          this.mergeInner(geometry, _typedArrayDic);
         }
       }
 
@@ -4848,53 +4844,49 @@
         var _this9 = this;
 
         if (Array.isArray(geometrys)) {
-          (function () {
-            var typedArrayDic = {};
-            var allVertexAttribs = Geometry._allVertexAttribs(_this9._vertices);
+          var typedArrayDic = {};
+          var allVertexAttribs = Geometry._allVertexAttribs(this._vertices);
+          allVertexAttribs.forEach(function (attribName) {
+            var thisLength = _this9._vertices[attribName].length;
+
+            var allGeomLength = 0;
+            geometrys.forEach(function (geometry) {
+              allGeomLength += geometry._vertices[attribName].length;
+            });
+            typedArrayDic[attribName] = new Float32Array(thisLength + allGeomLength);
+          });
+
+          var lastThisLengthDic = {};
+          allVertexAttribs.forEach(function (attribName) {
+            lastThisLengthDic[attribName] = 0;
+          });
+          geometrys.forEach(function (geometry, index) {
+            var typedSubArrayDic = {};
             allVertexAttribs.forEach(function (attribName) {
-              var thisLength = _this9._vertices[attribName].length;
+              var typedArray = typedArrayDic[attribName];
 
-              var allGeomLength = 0;
-              geometrys.forEach(function (geometry) {
-                allGeomLength += geometry._vertices[attribName].length;
-              });
-              typedArrayDic[attribName] = new Float32Array(thisLength + allGeomLength);
+              if (index === 0) {
+                lastThisLengthDic[attribName] = geometrys[index]._vertices[attribName].length;
+              }
+
+              var end = typeof geometrys[index + 1] !== 'undefined' ? lastThisLengthDic[attribName] + geometrys[index + 1]._vertices[attribName].length : void 0;
+              typedSubArrayDic[attribName] = typedArray.subarray(0, end);
+              lastThisLengthDic[attribName] = end;
             });
-
-            var lastThisLengthDic = {};
-            allVertexAttribs.forEach(function (attribName) {
-              lastThisLengthDic[attribName] = 0;
-            });
-            geometrys.forEach(function (geometry, index) {
-              var typedSubArrayDic = {};
-              allVertexAttribs.forEach(function (attribName) {
-                var typedArray = typedArrayDic[attribName];
-
-                if (index === 0) {
-                  lastThisLengthDic[attribName] = geometrys[index]._vertices[attribName].length;
-                }
-
-                var end = typeof geometrys[index + 1] !== 'undefined' ? lastThisLengthDic[attribName] + geometrys[index + 1]._vertices[attribName].length : void 0;
-                typedSubArrayDic[attribName] = typedArray.subarray(0, end);
-                lastThisLengthDic[attribName] = end;
-              });
-              _this9.mergeHarderInner(geometry, typedSubArrayDic, index === 0);
-            });
-          })();
+            _this9.mergeHarderInner(geometry, typedSubArrayDic, index === 0);
+          });
         } else {
-          (function () {
-            var geometry = geometrys;
-            var typedArrayDic = {};
-            var allVertexAttribs = Geometry._allVertexAttribs(_this9._vertices);
-            allVertexAttribs.forEach(function (attribName) {
-              var thisLength = _this9._vertices[attribName].length;
-              var geomLength = geometry._vertices[attribName].length;
+          var geometry = geometrys;
+          var _typedArrayDic2 = {};
+          var _allVertexAttribs3 = Geometry._allVertexAttribs(this._vertices);
+          _allVertexAttribs3.forEach(function (attribName) {
+            var thisLength = _this9._vertices[attribName].length;
+            var geomLength = geometry._vertices[attribName].length;
 
-              typedArrayDic[attribName] = new Float32Array(thisLength + geomLength);
-            });
+            _typedArrayDic2[attribName] = new Float32Array(thisLength + geomLength);
+          });
 
-            _this9.mergeHarderInner(geometry, typedArrayDic);
-          })();
+          this.mergeHarderInner(geometry, _typedArrayDic2);
         }
       }
 
@@ -7822,8 +7814,6 @@
     }, {
       key: 'prepareToRender',
       value: function prepareToRender(expression, existCamera_f, pointLight, meshMaterial, skeletalMesh) {
-        var _this3 = this;
-
         // before prepareForRender of 'Geometry' class, a new 'BlendShapeShader'(which extends default shader) is assigned.
 
         if (this._materials.length > 0) {
@@ -7835,38 +7825,36 @@
         }
 
         if (!(this._materialForSkeletal.shaderInstance !== null && this._materialForSkeletal.shaderInstance.constructor === FreeShader)) {
-          (function () {
-            var SkeletalShader = function (_materialForSkeletal$) {
-              babelHelpers.inherits(SkeletalShader, _materialForSkeletal$);
+          var _SkeletalShader = function (_materialForSkeletal$) {
+            babelHelpers.inherits(_SkeletalShader, _materialForSkeletal$);
 
-              function SkeletalShader(glBoostContext, basicShader) {
-                babelHelpers.classCallCheck(this, SkeletalShader);
+            function _SkeletalShader(glBoostContext, basicShader) {
+              babelHelpers.classCallCheck(this, _SkeletalShader);
 
-                var _this2 = babelHelpers.possibleConstructorReturn(this, (SkeletalShader.__proto__ || Object.getPrototypeOf(SkeletalShader)).call(this, glBoostContext, basicShader));
+              var _this2 = babelHelpers.possibleConstructorReturn(this, (_SkeletalShader.__proto__ || Object.getPrototypeOf(_SkeletalShader)).call(this, glBoostContext, basicShader));
 
-                SkeletalShader.mixin(SkeletalShaderSource);
-                return _this2;
-              }
+              _SkeletalShader.mixin(SkeletalShaderSource);
+              return _this2;
+            }
 
-              return SkeletalShader;
-            }(_this3._materialForSkeletal.shaderClass);
+            return _SkeletalShader;
+          }(this._materialForSkeletal.shaderClass);
 
-            if (_this3._materials.length > 0) {
-              for (var i = 0; i < _this3._materials.length; i++) {
-                if (_this3._materials[i].shaderClass.name !== SkeletalShader.name) {
-                  _this3._materials[i].shaderClass = SkeletalShader;
-                }
-              }
-            } else if (meshMaterial) {
-              if (meshMaterial.shaderClass.name !== SkeletalShader.name) {
-                meshMaterial.shaderClass = SkeletalShader;
-              }
-            } else {
-              if (_this3._defaultMaterial.shaderClass.name !== SkeletalShader.name) {
-                _this3._defaultMaterial.shaderClass = SkeletalShader;
+          if (this._materials.length > 0) {
+            for (var i = 0; i < this._materials.length; i++) {
+              if (this._materials[i].shaderClass.name !== _SkeletalShader.name) {
+                this._materials[i].shaderClass = _SkeletalShader;
               }
             }
-          })();
+          } else if (meshMaterial) {
+            if (meshMaterial.shaderClass.name !== _SkeletalShader.name) {
+              meshMaterial.shaderClass = _SkeletalShader;
+            }
+          } else {
+            if (this._defaultMaterial.shaderClass.name !== _SkeletalShader.name) {
+              this._defaultMaterial.shaderClass = _SkeletalShader;
+            }
+          }
         }
 
         babelHelpers.get(M_SkeletalGeometry.prototype.__proto__ || Object.getPrototypeOf(M_SkeletalGeometry.prototype), 'prepareToRender', this).call(this, expression, existCamera_f, pointLight, meshMaterial, skeletalMesh);
@@ -10626,11 +10614,21 @@
             }
             fs.readFile.apply(fs, args);
           } else {
-            (function () {
-              var xmlHttp = new XMLHttpRequest();
-              if (isBinary) {
-                xmlHttp.responseType = "arraybuffer";
-                xmlHttp.onload = function (oEvent) {
+            var xmlHttp = new XMLHttpRequest();
+            if (isBinary) {
+              xmlHttp.responseType = "arraybuffer";
+              xmlHttp.onload = function (oEvent) {
+                var response = null;
+                if (isBinary) {
+                  response = xmlHttp.response;
+                } else {
+                  response = xmlHttp.responseText;
+                }
+                resolveCallback(resolve, response);
+              };
+            } else {
+              xmlHttp.onreadystatechange = function () {
+                if (xmlHttp.readyState === 4 && (Math.floor(xmlHttp.status / 100) === 2 || xmlHttp.status === 0)) {
                   var response = null;
                   if (isBinary) {
                     response = xmlHttp.response;
@@ -10638,28 +10636,16 @@
                     response = xmlHttp.responseText;
                   }
                   resolveCallback(resolve, response);
-                };
-              } else {
-                xmlHttp.onreadystatechange = function () {
-                  if (xmlHttp.readyState === 4 && (Math.floor(xmlHttp.status / 100) === 2 || xmlHttp.status === 0)) {
-                    var response = null;
-                    if (isBinary) {
-                      response = xmlHttp.response;
-                    } else {
-                      response = xmlHttp.responseText;
-                    }
-                    resolveCallback(resolve, response);
-                  } else {
-                    if (rejectCallback) {
-                      rejectCallback(reject, xmlHttp.status);
-                    }
+                } else {
+                  if (rejectCallback) {
+                    rejectCallback(reject, xmlHttp.status);
                   }
-                };
-              }
+                }
+              };
+            }
 
-              xmlHttp.open("GET", resourceUri, true);
-              xmlHttp.send(null);
-            })();
+            xmlHttp.open("GET", resourceUri, true);
+            xmlHttp.send(null);
           }
         });
       }
@@ -10679,6 +10665,7 @@
         shaderText += 'uniform vec3 viewPosition;\n';
         shaderText += 'uniform vec4 Kd;\n';
         shaderText += 'uniform vec4 Ks;\n';
+        shaderText += 'uniform vec4 Ka;\n';
         shaderText += 'uniform float power;\n';
 
         return shaderText;
@@ -10690,6 +10677,9 @@
         shaderText += '  vec4 surfaceColor = rt0;\n';
         shaderText += '  rt0 = vec4(0.0, 0.0, 0.0, 0.0);\n';
         shaderText += '  vec3 normal = normalize(v_normal);\n';
+
+        // Ambient lighting is unconditional and not related to the number of lights in the scene
+        shaderText += '    rt0 += Ka * surfaceColor;\n';
 
         shaderText += '  for (int i=0; i<' + lights.length + '; i++) {\n';
         // if PointLight: lightPosition[i].w === 1.0      if DirectionalLight: lightPosition[i].w === 0.0
@@ -10704,7 +10694,6 @@
         //    shaderText += '  rt0 *= (1.0 - shadowRatio);\n';
         //shaderText += '  rt0.a = 1.0;\n';
 
-
         return shaderText;
       }
     }, {
@@ -10713,6 +10702,7 @@
 
         var vertexAttribsAsResult = [];
 
+        material.setUniform(shaderProgram.hashId, 'uniform_Ka', gl.getUniformLocation(shaderProgram, 'Ka'));
         material.setUniform(shaderProgram.hashId, 'uniform_Kd', gl.getUniformLocation(shaderProgram, 'Kd'));
         material.setUniform(shaderProgram.hashId, 'uniform_Ks', gl.getUniformLocation(shaderProgram, 'Ks'));
         material.setUniform(shaderProgram.hashId, 'uniform_power', gl.getUniformLocation(shaderProgram, 'power'));
@@ -10747,6 +10737,8 @@
 
         var Kd = material.diffuseColor;
         var Ks = material.specularColor;
+        var Ka = material.ambientColor;
+        gl.uniform4f(material.getUniform(glslProgram.hashId, 'uniform_Ka'), Ka.x, Ka.y, Ka.z, Ka.w);
         gl.uniform4f(material.getUniform(glslProgram.hashId, 'uniform_Kd'), Kd.x, Kd.y, Kd.z, Kd.w);
         gl.uniform4f(material.getUniform(glslProgram.hashId, 'uniform_Ks'), Ks.x, Ks.y, Ks.z, Ks.w);
         gl.uniform1f(material.getUniform(glslProgram.hashId, 'uniform_power'), this._power);

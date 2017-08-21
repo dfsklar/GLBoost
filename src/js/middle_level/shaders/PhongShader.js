@@ -7,6 +7,7 @@ export class PhongShaderSource {
     shaderText += `uniform vec3 viewPosition;\n`;
     shaderText += `uniform vec4 Kd;\n`;
     shaderText += `uniform vec4 Ks;\n`;
+    shaderText += `uniform vec4 Ka;\n`;
     shaderText += `uniform float power;\n`;
 
     return shaderText;
@@ -18,6 +19,9 @@ export class PhongShaderSource {
     shaderText += '  rt0 = vec4(0.0, 0.0, 0.0, 0.0);\n';
     shaderText += '  vec3 normal = normalize(v_normal);\n';
 
+    // Ambient lighting is unconditional and not related to the number of lights in the scene
+    shaderText += `    rt0 += Ka * surfaceColor;\n`;
+      
     shaderText += `  for (int i=0; i<${lights.length}; i++) {\n`;
     // if PointLight: lightPosition[i].w === 1.0      if DirectionalLight: lightPosition[i].w === 0.0
     shaderText += `    vec3 light = normalize(lightPosition[i].xyz - position.xyz * lightPosition[i].w);\n`;
@@ -31,8 +35,6 @@ export class PhongShaderSource {
 //    shaderText += '  rt0 *= (1.0 - shadowRatio);\n';
     //shaderText += '  rt0.a = 1.0;\n';
 
-
-
     return shaderText;
   }
 
@@ -40,6 +42,7 @@ export class PhongShaderSource {
 
     var vertexAttribsAsResult = [];
 
+    material.setUniform(shaderProgram.hashId, 'uniform_Ka', gl.getUniformLocation(shaderProgram, 'Ka'));
     material.setUniform(shaderProgram.hashId, 'uniform_Kd', gl.getUniformLocation(shaderProgram, 'Kd'));
     material.setUniform(shaderProgram.hashId, 'uniform_Ks', gl.getUniformLocation(shaderProgram, 'Ks'));
     material.setUniform(shaderProgram.hashId, 'uniform_power', gl.getUniformLocation(shaderProgram, 'power'));
@@ -67,6 +70,8 @@ export default class PhongShader extends DecalShader {
 
     var Kd = material.diffuseColor;
     var Ks = material.specularColor;
+    var Ka = material.ambientColor;
+    gl.uniform4f(material.getUniform(glslProgram.hashId, 'uniform_Ka'), Ka.x, Ka.y, Ka.z, Ka.w);
     gl.uniform4f(material.getUniform(glslProgram.hashId, 'uniform_Kd'), Kd.x, Kd.y, Kd.z, Kd.w);
     gl.uniform4f(material.getUniform(glslProgram.hashId, 'uniform_Ks'), Ks.x, Ks.y, Ks.z, Ks.w);
     gl.uniform1f(material.getUniform(glslProgram.hashId, 'uniform_power'), this._power);
